@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find delicious recipes using ingredients you already have. Cook smart, waste less with AI-powered recipe suggestions.">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Recipe Finder — Cook Smart, Waste Less</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-name">Recipe Finder</span>
+                        <span class="logo-sub">Cook Smart · Waste Less</span>
+                    </div>
+                </div>
+                <div class="nav-stats" id="navStats" style="display:none;">
+                    <div class="stat-pill">
+                        <i class="fas fa-leaf"></i>
+                        <span id="ingredientCountNav">0 ingredients</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    AI-Powered Recipe Discovery
+                </div>
+                <h1 class="hero-title">
+                    What's hiding in<br>
+                    <span class="title-accent">your kitchen?</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Enter the ingredients you have and we'll find the perfect recipes to make. No more wasted food, just delicious meals.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+
+            <!-- Ingredient Input Card -->
+            <div class="card input-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-carrot"></i></div>
+                    <div>
+                        <h2 class="card-title">Add Your Ingredients</h2>
+                        <p class="card-subtitle">Tell us what you have on hand</p>
+                    </div>
+                </div>
+
+                <div class="input-wrapper">
+                    <div class="input-row">
+                        <div class="input-field-wrap">
+                            <i class="fas fa-search input-icon"></i>
+                            <input
+                                type="text"
+                                id="ingredientInput"
+                                placeholder="e.g. chicken, tomatoes, garlic..."
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                            <div id="ingredientSuggestions" class="autocomplete-suggestions"></div>
+                        </div>
+                        <button id="addIngredientBtn" class="btn btn-add" aria-label="Add ingredient">
+                            <i class="fas fa-plus"></i>
+                            <span>Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ingredient Tags -->
+                <div id="ingredientsList" class="ingredients-cloud">
+                    <div class="empty-ingredients">
+                        <i class="fas fa-seedling"></i>
+                        <span>Add ingredients above to get started</span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>Refine your search</span>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-leaf"></i> Diet</label>
+                        <select id="dietFilter" class="filter-select">
+                            <option value="">Any diet</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="gluten-free">Gluten Free</option>
+                            <option value="ketogenic">Keto</option>
+                            <option value="paleo">Paleo</option>
+                            <option value="pescetarian">Pescetarian</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-globe"></i> Cuisine</label>
+                        <select id="cuisineFilter" class="filter-select">
+                            <option value="">Any cuisine</option>
+                            <option value="italian">Italian</option>
+                            <option value="mexican">Mexican</option>
+                            <option value="chinese">Chinese</option>
+                            <option value="indian">Indian</option>
+                            <option value="mediterranean">Mediterranean</option>
+                            <option value="american">American</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="thai">Thai</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-clock"></i> Max Time</label>
+                        <div class="time-input-wrap">
+                            <input
+                                type="number"
+                                id="maxTimeFilter"
+                                placeholder="60"
+                                min="5"
+                                max="300"
+                                class="filter-input"
+                            >
+                            <span class="time-unit">min</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="search-action">
+                    <button id="searchBtn" class="btn btn-search" disabled>
+                        <i class="fas fa-magic"></i>
+                        <span>Find Recipes</span>
+                    </button>
+                    <p class="search-hint" id="searchHint">Add at least one ingredient to search</p>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingIndicator" class="loading-card hidden" role="status" aria-live="polite">
+                <div class="loading-inner">
+                    <div class="loading-animation">
+                        <div class="fork-spinner">
+                            <div class="fork-tine"></div>
+                            <div class="fork-tine"></div>
+                            <div class="fork-tine"></div>
+                        </div>
+                    </div>
+                    <p class="loading-text">Searching for delicious recipes...</p>
+                    <p class="loading-sub">This may take a moment</p>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-toast hidden" role="alert" aria-live="assertive">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+                <button class="error-close" onclick="hideError()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden" aria-label="Recipe results">
+                <div class="results-header">
+                    <div>
+                        <h2 class="results-title">Recipe Suggestions</h2>
+                        <p class="results-count" id="resultsCount"></p>
+                    </div>
+                    <div class="results-actions">
+                        <button class="btn-ghost" id="clearResultsBtn" onclick="clearAll()">
+                            <i class="fas fa-redo"></i> New Search
+                        </button>
+                    </div>
+                </div>
+
+                <div id="recipeGrid" class="recipe-grid" role="list"></div>
+
+                <!-- Load More -->
+                <div id="loadMoreContainer" class="load-more-container hidden">
+                    <button class="btn btn-outline" id="loadMoreBtn" onclick="loadMoreRecipes()">
+                        <i class="fas fa-chevron-down"></i>
+                        <span>Load More Recipes</span>
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Recipe Modal -->
+    <div id="recipeModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-container">
+            <button class="modal-close-btn" id="closeModal" aria-label="Close recipe details">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-utensils"></i>
+                    <span>Recipe Finder</span>
+                </div>
+                <p class="footer-text">
+                    Powered by <a href="https://spoonacular.com/food-api" target="_blank" rel="noopener">Spoonacular API</a> · Built to reduce food waste
+                </p>
+                <p class="footer-credit">Made with ❤️ by Sudeen Jain H R</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
