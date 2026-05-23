@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Recipe Finder — find delicious recipes from ingredients you already have. Reduce food waste and cook smarter with AI-powered recipe suggestions.">
+    <meta name="keywords" content="recipe finder, cooking, food waste, ingredients, recipes, meal planning, cooking tips">
+    <meta name="author" content="Interactive Recipe Finder">
+    <meta name="theme-color" content="#ff6b6b">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://recipe-finder.vercel.app/">
+    <meta property="og:title" content="Interactive Recipe Finder - Cook Smart, Waste Less">
+    <meta property="og:description" content="Find delicious recipes from ingredients you already have. Reduce food waste and cook smarter.">
+    <meta property="og:image" content="https://recipe-finder.vercel.app/recipe-cards.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://recipe-finder.vercel.app/">
+    <meta property="twitter:title" content="Interactive Recipe Finder - Cook Smart, Waste Less">
+    <meta property="twitter:description" content="Find delicious recipes from ingredients you already have. Reduce food waste and cook smarter.">
+    <meta property="twitter:image" content="https://recipe-finder.vercel.app/recipe-cards.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://recipe-finder.vercel.app/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://api.spoonacular.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://api.spoonacular.com">
+    <link rel="dns-prefetch" href="https://spoonacular.com">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    
+    <title>Interactive Recipe Finder - Cook Smart, Waste Less</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <h1>Recipe Finder</h1>
+                </div>
+                <p class="tagline">Cook smart with what you have • Reduce food waste</p>
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Ingredient Input Section -->
+            <section class="ingredient-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-carrot"></i> What's in your kitchen?</h2>
+                    <p>Enter ingredients you have and discover delicious recipes</p>
+                </div>
+
+                <div class="ingredient-input-wrapper">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="ingredientInput" 
+                            placeholder="e.g., chicken, tomatoes, garlic..."
+                            autocomplete="off"
+                        >
+                        <button id="addIngredientBtn" class="btn btn-primary" aria-label="Add ingredient">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div id="ingredientSuggestions" class="suggestions"></div>
+                </div>
+
+                <!-- Ingredients List -->
+                <div id="ingredientsList" class="ingredients-list"></div>
+
+                <!-- Search Controls -->
+                <div class="search-controls">
+                    <div class="filters">
+                        <select id="dietFilter" class="filter-select">
+                            <option value="">All Diets</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="gluten-free">Gluten Free</option>
+                            <option value="ketogenic">Keto</option>
+                            <option value="paleo">Paleo</option>
+                        </select>
+
+                        <select id="cuisineFilter" class="filter-select">
+                            <option value="">All Cuisines</option>
+                            <option value="italian">Italian</option>
+                            <option value="mexican">Mexican</option>
+                            <option value="chinese">Chinese</option>
+                            <option value="indian">Indian</option>
+                            <option value="mediterranean">Mediterranean</option>
+                            <option value="american">American</option>
+                        </select>
+
+                        <input 
+                            type="number" 
+                            id="maxTimeFilter" 
+                            placeholder="Max time (min)"
+                            min="0"
+                            class="filter-input"
+                        >
+                    </div>
+
+                    <button id="searchBtn" class="btn btn-search" disabled aria-label="Find recipes">
+                        <i class="fas fa-search"></i> Find Recipes
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading-indicator hidden">
+                <div class="spinner"></div>
+                <p>Finding delicious recipes...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message hidden"></div>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <div class="section-header">
+                    <h2><i class="fas fa-book-open"></i> Recipe Suggestions</h2>
+                    <p id="resultsCount"></p>
+                </div>
+
+                <div id="recipeGrid" class="recipe-grid"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Recipe Modal -->
+    <div id="recipeModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal" aria-label="Close recipe details">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Powered by Spoonacular API • Built to reduce food waste</p>
+        </div>
+    </footer>
+
+    <!-- Runtime configuration (set your API key in `config.js` or via your hosting platform) -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

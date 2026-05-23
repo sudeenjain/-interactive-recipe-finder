@@ -1,0 +1,12 @@
+{
+  "name": "interactive-recipe-finder",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate-config": "node scripts/generate-config.js",
+    "build": "npm run generate-config"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
